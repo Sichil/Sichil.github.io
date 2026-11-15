@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { site } from '../config';
+import { getPosts, formatDate } from '../lib/posts';
+import { url } from '../lib/url';
+
+const posts = await getPosts();
+const latest = posts.slice(0, 5);
+const latestDate = posts[0]?.data.pubDate;
+---
+
+<BaseLayout description={site.description}>
+  <section class="hero">
+    {site.avatar && (
+      <img
+        class="hero-avatar"
+        src={url(site.avatar)}
+        alt={site.author}
+        width="80"
+        height="80"
+        loading="eager"
+      />
+    )}
+    <h1 class="hero-title">{site.title}</h1>
+    <p class="hero-tagline">{site.tagline}</p>
+    <p class="hero-meta">
+      {posts.length > 0
+        ? `共 ${posts.length} 篇 · 最近更新 ${latestDate ? formatDate(latestDate) : ''}`
+        : '还没有文章，先去 src/content/posts/ 写第一篇吧'}
+    </p>
+  </section>
+
+  {
+    latest.length > 0 && (
+      <section aria-labelledby="latest-heading">
+        <h2 class="section-title" id="latest-heading">
+          最近文章
+        </h2>
+        <ul class="post-list">
+          {latest.map((post) => (
+            <li>
+              <PostCard post={post} />
+            </li>
+          ))}
+        </ul>
+        {posts.length > latest.length && (
+          <a class="more-link" href={url('/posts/')}>
+            查看全部 {posts.length} 篇文章 →
+          </a>
+        )}
+      </section>
+    )
+  }
+
+  <div style="height: 3.5rem"></div>
+</BaseLayout>

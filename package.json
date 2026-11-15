@@ -1,0 +1,19 @@
+{
+  "name": "snow-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "一个黑底星空的个人博客，雪花飘落，内容用 Markdown 编写，部署在 GitHub Pages。",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.4.12"
+  }
+}

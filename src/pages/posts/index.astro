@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts, groupByYear, formatISO } from '../../lib/posts';
+import { url } from '../../lib/url';
+
+const posts = await getPosts();
+const groups = groupByYear(posts);
+const pad = (value: number) => `${value}`.padStart(2, '0');
+---
+
+<BaseLayout title="全部文章" description="按时间排列的全部文章。">
+  <section class="archive">
+    <h1 class="page-title">全部文章</h1>
+    <p class="page-subtitle">共 {posts.length} 篇，按发表时间从新到旧排列。</p>
+
+    {
+      groups.map((group) => (
+        <section class="year-group" aria-label={`${group.year} 年`}>
+          <h2 class="year-label">{group.year}</h2>
+          <ul class="archive-list">
+            {group.posts.map((post) => (
+              <li class="archive-item">
+                <time class="archive-date" datetime={formatISO(post.data.pubDate)}>
+                  {pad(post.data.pubDate.getMonth() + 1)}-{pad(post.data.pubDate.getDate())}
+                </time>
+                <div>
+                  <a class="archive-title" href={url(`/posts/${post.id}/`)}>
+                    {post.data.title}
+                  </a>
+                  {post.data.description && <span class="archive-desc">{post.data.description}</span>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </section>
+</BaseLayout>

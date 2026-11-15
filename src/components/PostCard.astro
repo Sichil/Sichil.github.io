@@ -1,0 +1,23 @@
+---
+import type { Post } from '../lib/posts';
+import { formatDate, formatISO, readingTime } from '../lib/posts';
+import { url } from '../lib/url';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate } = post.data;
+const minutes = readingTime(post.body);
+---
+
+<a class="post-card" href={url(`/posts/${post.id}/`)}>
+  <h3 class="post-card-title">{title}</h3>
+  {description && <p class="post-card-desc">{description}</p>}
+  <p class="post-card-meta">
+    <time datetime={formatISO(pubDate)}>{formatDate(pubDate)}</time>
+    <span>{minutes} 分钟读完</span>
+    {updatedDate && <span>更新于 {formatDate(updatedDate)}</span>}
+  </p>
+</a>

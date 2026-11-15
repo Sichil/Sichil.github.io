@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="页面不见了" description="这个页面大概是被雪埋住了。" noindex>
+  <section class="notfound">
+    <h1 class="notfound-code">404</h1>
+    <p class="notfound-text">这个页面大概是被雪埋住了。</p>
+    <a href={url('/')}>← 回到首页</a>
+  </section>
+</BaseLayout>
