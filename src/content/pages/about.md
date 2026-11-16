@@ -23,7 +23,7 @@ description: 一点自我介绍，和一些可以找到我的地方。
 
 ## 联系我
 
-- GitHub：[github.com/sichilx](https://github.com/sichilx)
+- GitHub：[github.com/Sichil](https://github.com/Sichil)
 - 邮箱：sichilx@gmail.com
 
 如果这里的某句话让你想起了什么，欢迎写信来说。

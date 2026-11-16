@@ -1,5 +1,7 @@
 # 雪夜小站 · 一个黑底飘雪的个人博客
 
+> 线上地址：**https://Sichil.github.io/**　·　仓库：**https://github.com/Sichil/Sichil.github.io**
+
 一个开箱即用的个人博客：黑色夜空、星星、慢慢飘下来的雪，内容全部用 Markdown 写作，托管在 GitHub Pages 上（免费、无需服务器）。
 
 - 文章 = `src/content/posts/` 下的一个 `.md` 文件
@@ -137,13 +139,7 @@ snow: {
 1. 把图片放进 `public/images/`，比如 `public/images/snow.jpg`
 2. 文章里这样引用：`![雪](/images/snow.jpg)`
 
-注意：如果你的仓库名不是 `<用户名>.github.io`（也就是网站地址带着 `/仓库名/` 前缀），写 `/images/snow.jpg` 会指到根域名。稳妥的写法是用完整网址：
-
-```markdown
-![雪](https://<用户名>.github.io/<仓库名>/images/snow.jpg)
-```
-
-想省心，就把仓库命名为 `<用户名>.github.io`，图片直接用 `/images/xxx.jpg`，站内链接也不用管前缀。
+因为这个仓库名是 `Sichil.github.io`（用户站点，网站在根路径），`/images/xxx.jpg` 这种写法直接就能用，不需要加任何前缀。
 
 ---
 
@@ -180,34 +176,37 @@ snow-blog/
 
 ---
 
-## 七、发布到 GitHub Pages
+## 七、发布与更新
 
-### 1. 建仓库
+这个站点已经接在 **https://github.com/Sichil/Sichil.github.io** 上，Pages 的 Source 是 **GitHub Actions**。
 
-在 GitHub 上新建一个 **Public** 仓库。名字有两种选择：
-
-- `<你的用户名>.github.io` → 网站地址最干净：`https://<你的用户名>.github.io/`
-- 其他名字（如 `blog`）→ 网站地址是 `https://<你的用户名>.github.io/blog/`，代码会自动适配
-
-### 2. 推代码
-
-这个目录已经是一个 git 仓库（有一次初始提交），只需要接上远端：
+### 日常更新（绝大多数时候只需要这一步）
 
 ```bash
-cd snow-blog
-git remote add origin https://github.com/<你的用户名>/<仓库名>.git
-git push -u origin main
+cd D:\DSHwork\snow-blog
+git add -A
+git commit -m "写点什么"
+git push
 ```
 
-> 第一次推送会要求登录。GitHub 早已不支持密码，请用 **Personal Access Token**（GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens，勾选该仓库的 Contents: Read and write）作为密码，或者用 GitHub Desktop / VS Code 的 GitHub 登录。
+推完等 1～2 分钟，https://Sichil.github.io/ 自动更新。
+也可以直接在 GitHub 网页上改文件、提交，效果完全一样。
 
-### 3. 打开 Pages
+### 第一次是怎么接上去的（留档，不用再做）
 
-仓库 → **Settings → Pages** → **Build and deployment → Source** 选 **GitHub Actions**（不要选 "Deploy from a branch"）。
+1. `gh auth login` 授权 GitHub CLI（`repo`、`workflow` 权限）
+2. `gh repo create Sichil.github.io --public --source . --remote origin --push`
+3. 仓库 Settings → Pages → Source 选 **GitHub Actions**
+4. Actions 里的 "Deploy to GitHub Pages" 跑完，站点上线
 
-然后到 **Actions** 标签页，能看到 "Deploy to GitHub Pages" 正在跑。第一次大约 1～2 分钟，绿勾之后访问 Pages 页面上给出的网址即可。
+### 换一台电脑继续写
 
-以后每次 `git push`，都会自动重新构建发布。
+```bash
+git clone https://github.com/Sichil/Sichil.github.io.git
+cd Sichil.github.io
+pnpm install
+pnpm dev
+```
 
 ---
 
@@ -222,14 +221,15 @@ git push -u origin main
 - 刚建仓库的前几分钟，Pages 有时需要等一会儿
 
 **页面 404**
-- 仓库名不是 `<用户名>.github.io` 时，地址后面要带 `/仓库名/`
-- 如果站内链接全 404，检查 `astro.config.mjs` 里的 `base` 是否被手动改过（正常情况下不用动，它会从 `GITHUB_REPOSITORY` 自动推断）
+- 本仓库是用户站点（`Sichil.github.io`），网址在根路径，`base` 由构建设置自动推断，正常情况不用管
+- 文章改名会换网址，旧链接自然就 404 了
+- 新文章刚推上去还没构建完时，也可能短暂 404
 
 **仓库是 Private 可以吗**
 GitHub Pages 对私有仓库的站点发布需要付费方案。个人博客建议直接用 Public 仓库，代码公开也没什么损失。
 
 **想换域名**
-1. 在域名服务商处把域名 CNAME 到 `<你的用户名>.github.io`
+1. 在域名服务商处把域名 CNAME 到 `Sichil.github.io`
 2. 在 `public/` 下新建 `CNAME` 文件，里面写一行你的域名
 3. 仓库 Settings → Pages → Custom domain 填入域名
 4. 在 `astro.config.mjs` 里把 `site` 改成 `https://你的域名`，并把 `base` 设为 `'/'`
