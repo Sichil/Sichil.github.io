@@ -1,6 +1,6 @@
 # 雪夜小站 · 一个黑底飘雪的个人博客
 
-> 线上地址：**https://Sichil.github.io/**　·　仓库：**https://github.com/Sichil/Sichil.github.io**
+> 线上地址：**https://Sichil.github.io/**　·　  仓库：**https://github.com/Sichil/Sichil.github.io**
 
 一个开箱即用的个人博客：黑色夜空、星星、慢慢飘下来的雪，内容全部用 Markdown 写作，托管在 GitHub Pages 上（免费、无需服务器）。
 
