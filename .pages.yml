@@ -1,0 +1,80 @@
+# Pages CMS 配置（浏览器里写文章的后台）
+# ------------------------------------------------------------------
+# 用法：打开 https://app.pagescms.org ，用 GitHub 登录并授权这个仓库，
+# 之后就能在表单里写文章、传图片，不用再一层层点文件夹、手写 frontmatter。
+#
+# 这个文件只影响后台的编辑界面，不影响网站本身的构建和样式。
+# 字段名必须和 src/content.config.ts 里的 schema 对得上。
+# 改完要提交到仓库，后台才会生效。
+
+# 图片上传到哪里：存到 public/images/，正文里写成 /images/xxx.png
+media:
+  input: public/images
+  output: /images
+  rename: safe
+  categories: [image]
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: src/content/posts
+    format: yaml-frontmatter
+    filename:
+      # 新建时的默认文件名（= 网址），日期开头方便排序；创建时还能手动改
+      template: '{year}-{month}-{day}-{primary}.md'
+      field: create
+    view:
+      primary: title
+      sort: pubDate
+      order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: description
+        label: 摘要（显示在文章列表里，一句话就够）
+        type: text
+      - name: pubDate
+        label: 发布日期
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updatedDate
+        label: 修改日期（留空就不显示"更新于"）
+        type: date
+        default: ''
+        options:
+          format: yyyy-MM-dd
+      - name: draft
+        label: 存为草稿（勾上就暂时不发布）
+        type: boolean
+        default: false
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true
+
+  - name: about
+    label: 关于页
+    type: file
+    path: src/content/pages/about.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: 页面标题
+        type: string
+        required: true
+      - name: description
+        label: 页面描述（搜索引擎用）
+        type: text
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          format: markdown
+          switcher: true

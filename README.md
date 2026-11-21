@@ -5,6 +5,7 @@
 一个开箱即用的个人博客：黑色夜空、星星、慢慢飘下来的雪，内容全部用 Markdown 写作，托管在 GitHub Pages 上（免费、无需服务器）。
 
 - 文章 = `src/content/posts/` 下的一个 `.md` 文件
+- 三种写法：浏览器后台（Pages CMS）、`pnpm new "标题"` 一条命令、或直接写 `.md`
 - 站点名字、简介、导航、雪的大小 = `src/config.ts` 一个文件
 - 颜色、字号、圆角 = `src/styles/global.css` 最上面的变量
 - 推送到 GitHub 后自动构建发布，不需要在电脑上点"部署"
@@ -33,6 +34,47 @@ pnpm preview       # 用本地服务器预览 dist/
 ---
 
 ## 二、写一篇文章
+
+有三种写法，挑顺手的用；内容格式完全一样，网站上效果也一样。
+
+| 方式 | 适合什么场景 | 需要准备 |
+| --- | --- | --- |
+| **A. 浏览器后台**（Pages CMS） | 手机上写、不想记格式、不想一层层点文件夹 | 一次性 GitHub 授权 |
+| **B. 一条命令** `pnpm new` | 坐在电脑前写 | 终端 |
+| **C. 直接建 `.md` 文件** | 想完全掌控，或只改一句话 | 无 |
+
+### A. 浏览器后台（最省事）
+
+1. 打开 **https://app.pagescms.org** ，用 GitHub 账号登录
+2. 按提示给 **Sichil/Sichil.github.io** 安装一次 GitHub App（只用于读写这个仓库，随时可在 GitHub → Settings → Applications 里撤销）
+3. 左边选「文章」→ 新建：填标题、写正文，日期自动就是今天
+   - 正文是所见即所得的编辑器，右上角能切到 Markdown 源码
+   - 图片直接拖进正文，会自动上传到 `public/images/`
+   - 「关于」页也能在这里改
+4. 点保存，Pages CMS 会替你提交到 GitHub；等 Actions 跑完（约 1 分钟）网站就更新
+
+后台有哪些字段、长什么样，由仓库根目录的 [`.pages.yml`](.pages.yml) 决定。
+
+### B. 本地一条命令（格式和日期自动填）
+
+```bash
+cd D:\DSHwork\snow-blog
+pnpm new "下第一场雪的时候"
+```
+
+会依次问你文件名（回车用默认的英文/日期名）和摘要，然后生成 `src/content/posts/xxx.md`，frontmatter 已经写好，还会用 VS Code 打开。不想被问就直接给参数：
+
+```bash
+pnpm new "下第一场雪的时候" --slug first-snow --desc "一句话摘要"
+```
+
+写完 `pnpm dev` 边看边改，发布还是那三行：
+
+```bash
+git add -A && git commit -m "新文章" && git push
+```
+
+### C. 直接建文件
 
 1. 在 `src/content/posts/` 里新建一个 `.md` 文件，比如 `first-snow.md`
 2. 开头写上这段（`---` 之间的部分叫 frontmatter）：
@@ -71,11 +113,9 @@ pubDate: 2026-11-20
 - **大小写敏感**：`Hello.md` 和 `hello.md` 是两个不同的网址。
 - **发布顺序**：按 `pubDate` 从新到旧排；`pubDate` 写成未来日期的文章会等到那天才出现。
 
-### 在 GitHub 网页上直接写（不用电脑装东西）
+### 只有手机的时候
 
-仓库页面 → 进入 `src/content/posts/` → 右上角 **Add file → Create new file** → 输入 `随便一个名字.md` → 粘贴上面的模板 → 底部 **Commit changes**。等 Actions 跑完（约 1 分钟），网站就更新了。
-
-手机上也能这么写。
+优先用 **A（Pages CMS）**，在手机浏览器里就能写完发布。GitHub 手机网页也能走 **C** 的流程，但确实要一层层点文件夹，不太舒服。
 
 ---
 
@@ -148,10 +188,12 @@ snow: {
 ```
 snow-blog/
 ├─ .github/workflows/deploy.yml   # 推送到 main 后自动构建并发布
+├─ .pages.yml                     # ★ 浏览器后台（Pages CMS）的表单配置
 ├─ astro.config.mjs               # 站点地址与 base（自动推断，一般不用改）
+├─ scripts/new-post.mjs           # ★ pnpm new 的实现：新建文章
 ├─ public/
 │  ├─ favicon.svg                 # 浏览器标签图标
-│  └─ images/                     # 自己放的图片
+│  └─ images/                     # 自己放的图片（后台传图也存这里）
 └─ src/
    ├─ config.ts                   # ★ 站点信息：站名、简介、导航、雪量
    ├─ content.config.ts           # 文章字段的校验规则
@@ -220,16 +262,20 @@ pnpm dev
 - 浏览器缓存：`Ctrl + F5` 强制刷新
 - 刚建仓库的前几分钟，Pages 有时需要等一会儿
 
+**在 Pages CMS 后台保存了，网站却没更新**
+- 后台保存等于替你提交了一次，去仓库 Actions 看这次提交的部署是否跑完
+- 检查文章是不是勾了「存为草稿」
+- 改的是 `.pages.yml` 的话，要等它提交并生效后刷新后台页面
+
 **页面 404**
-- 本仓库是用户站点（`Sichil.github.io`），网址在根路径，`base` 由构建设置自动推断，正常情况不用管
-- 文章改名会换网址，旧链接自然就 404 了
-- 新文章刚推上去还没构建完时，也可能短暂 404
+- 仓库名不是 `<用户名>.github.io` 时，地址后面要带 `/仓库名/`
+- 如果站内链接全 404，检查 `astro.config.mjs` 里的 `base` 是否被手动改过（正常情况下不用动，它会从 `GITHUB_REPOSITORY` 自动推断）
 
 **仓库是 Private 可以吗**
 GitHub Pages 对私有仓库的站点发布需要付费方案。个人博客建议直接用 Public 仓库，代码公开也没什么损失。
 
 **想换域名**
-1. 在域名服务商处把域名 CNAME 到 `Sichil.github.io`
+1. 在域名服务商处把域名 CNAME 到 `<你的用户名>.github.io`
 2. 在 `public/` 下新建 `CNAME` 文件，里面写一行你的域名
 3. 仓库 Settings → Pages → Custom domain 填入域名
 4. 在 `astro.config.mjs` 里把 `site` 改成 `https://你的域名`，并把 `base` 设为 `'/'`
