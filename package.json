@@ -13,6 +13,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "new": "node scripts/new-post.mjs",
+    "check": "node scripts/check-content.mjs",
+    "prebuild": "node scripts/check-content.mjs",
+    "predev": "node scripts/check-content.mjs",
     "astro": "astro"
   },
   "dependencies": {

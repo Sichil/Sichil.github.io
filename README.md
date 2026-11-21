@@ -109,6 +109,7 @@ pubDate: 2026-11-20
 
 ### 几个约定
 
+- **别放错目录**：文章放 `src/content/posts/`；`src/pages/posts/` 里是页面路由代码（`.astro`）。放错地方文章会默默消失，而现在 `pnpm build` / `pnpm dev` 之前会自动跑一遍检查（`pnpm check`），直接报错提醒你。
 - **文件名就是网址**：建议用英文、数字和连字符（`winter-notes.md`）。用中文也能生成，但网址会变成 `%E4%B8%AD%E6%96%87` 这种样子，分享出去不好看。
 - **大小写敏感**：`Hello.md` 和 `hello.md` 是两个不同的网址。
 - **发布顺序**：按 `pubDate` 从新到旧排；`pubDate` 写成未来日期的文章会等到那天才出现。
